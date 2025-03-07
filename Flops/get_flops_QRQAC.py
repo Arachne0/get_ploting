@@ -4,7 +4,7 @@ import csv
 
 ncmtss = [2, 10, 50, 100, 400]
 
-file_path1 = 'ploting/csv_files/QRQAC/QRQAC_planning_depths.xlsx'
+file_path1 = '../QRQAC/csv_files/QRQAC_planning_depths.xlsx'
 data1 = pd.ExcelFile(file_path1)
 sheet_data1 = data1.parse('Sheet1')
 columns1 = sheet_data1.columns
@@ -27,7 +27,7 @@ nmcts_groups = [
     grouped_data[:, i:i + 5] for i in range(0, 25, 5)
 ]
 
-file_path2 = 'ploting/csv_files/QRQAC/QRQAC_num_of_quantiles2.xlsx'
+file_path2 = '../QRQAC/csv_files/QRQAC_num_of_quantiles2.xlsx'
 data2 = pd.ExcelFile(file_path2)
 sheet_data2 = data2.parse('Sheet1')
 
@@ -37,7 +37,7 @@ eqrqac = sheet_data2[eqrqac_columns].to_numpy()
 # Models flops for different quantile numbers
 models_flops = [20736, 34560, 76032, 200448]
 
-output_file_path = 'flops_results_qrqac.csv'
+output_file_path = 'QRQAC_flops_results.csv'
 header = ['step', 'nmcts', 'quantile3_flops', 'quantile9_flops', 'quantile27_flops', 'quantile81_flops',
           'our_model_flops']
 results = []

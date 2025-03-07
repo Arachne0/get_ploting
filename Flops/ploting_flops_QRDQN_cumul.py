@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-file_path = "flops_results_qrdqn.csv"
+file_path = "QRDQN_flops_results.csv"
 df = pd.read_csv(file_path)
 columns_to_plot = ["quantile81_flops", "our_model_flops"]
 
