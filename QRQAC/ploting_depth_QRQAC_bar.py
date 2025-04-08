@@ -23,12 +23,12 @@ qrqac_columns_sorted = sorted(qrqac_columns, key=extract_quantile)
 qrqac_means_sorted = mean_values[qrqac_columns_sorted].values.reshape(len(qrqac_columns_sorted) // 5, 5)
 num_qrqac = qrqac_means_sorted.shape[0]
 
-
 width = 0.12
+font_size = 18
 group_width = (num_qrqac + 1) * width
 x = np.arange(len(nmcts_labels))
 
-fig, ax = plt.subplots(figsize=(4.5, 6))  # 가로 너비 축소
+fig, ax = plt.subplots(figsize=(4, 5))  # 가로 너비 축소
 
 for i in range(num_qrqac):
     ax.bar(x - group_width / 2 + i * width,
@@ -39,8 +39,8 @@ for i in range(num_qrqac):
 ax.bar(x - group_width / 2 + num_qrqac * width, eqrqac_means, width, label="EQRQAC", color="blue")
 
 # X, Y축 레이블 설정
-ax.set_xlabel("Number of MCTS simulations", fontsize=18)
-ax.set_ylabel("Planning Depth", fontsize=18)
+plt.xlabel(r"$N_{\text{mcts}}$", fontsize=font_size, labelpad=10)
+ax.set_ylabel("Planning Depth", fontsize=18, labelpad=10)
 
 # X축 눈금 설정
 ax.set_xticks(x)
@@ -54,15 +54,24 @@ ax.spines["right"].set_visible(False)
 max_value = max(np.max(qrqac_means_sorted), np.max(eqrqac_means))
 ax.set_ylim(0, max_value * 1.05)  # 5% 여유만 추가, 0에서 시작
 
-plt.subplots_adjust(top=0.95, right=0.95)
+plt.tight_layout()
 
-# 범례 설정
 unique_quantiles = sorted(set(extract_quantile(q) for q in qrqac_columns_sorted))
 qrqac_handles = [plt.Rectangle((0, 0), 1, 1, color="red", alpha=(i + 1) / num_qrqac) for i in range(len(unique_quantiles))]
-quantile_labels = [f"$\\text{{QR-QAC}} ~ N_{{tau}} {q}$" for q in unique_quantiles]
+quantile_labels = [f"$\\text{{QR-QAC}} ~ N_{{\\tau}}={q}$" for q in unique_quantiles]
 eqrqac_handle = plt.Rectangle((0, 0), 1, 1, color="blue", label="EQRQAC")
-ax.legend(handles=qrqac_handles + [eqrqac_handle], labels=quantile_labels + ["EQR-QAC"],
-          loc="upper left", bbox_to_anchor=(0, 1.05),
-          fontsize=18, fancybox=True, edgecolor='black', framealpha=0.8)
+
+ax.legend(handles=qrqac_handles + [eqrqac_handle],
+          labels=quantile_labels + ["EQR-QAC"],
+          loc="upper left",
+          bbox_to_anchor=(0, 1.05),
+          fontsize=16,
+          fancybox=True,
+          edgecolor='black',
+          framealpha=0.8,
+          columnspacing=0.4,  # 열 간 간격 줄이기
+          handlelength=0.6,  # 색상 박스 길이 줄이기
+          handletextpad=0.2  # 색상과 모델명 간 간격 줄이기
+          )
 
 plt.show()

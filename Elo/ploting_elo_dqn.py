@@ -14,6 +14,7 @@ elo_data["n_mcts"] = elo_data["Player Name"].apply(
 
 elo_data = elo_data[elo_data["n_mcts"] != "efficient"]
 elo_data["n_mcts"] = pd.to_numeric(elo_data["n_mcts"])
+elo_data["Elo Rating"] = pd.to_numeric(elo_data["Elo Rating"], errors="coerce")
 
 filtered_data = elo_data[elo_data["Model"].isin(["DQN", "QR-DQN", "EQR-DQN"])]
 
@@ -22,22 +23,23 @@ max_elo_per_group = filtered_data.loc[filtered_data.groupby(["Model", "n_mcts"])
 player_name_list = max_elo_per_group["Player Name"].tolist()
 
 plt.figure(figsize=(4, 5))
+
 font_size = 18
-bar_width = 0.15  # 막대 너비 조정
+bar_width = 0.12  # 막대 너비 조정
 
 custom_order_groups = [
     ["DQN", "QR-DQN", "EQR-DQN"]
-
 ]
 
 model_colors = {
     "DQN": "green", "QR-DQN": "magenta", "EQR-DQN": "cyan"
 }
 
-x_mapping = {2: 0, 10: 0.6, 50: 1.2, 100: 1.9, 400: 2.6}   # x축 위치 조정
+# x_mapping = {2: 0, 10: 0.6, 50: 1.2, 100: 1.8, 400: 2.4}   # x축 위치 조정
+x_mapping = {2: 0, 10: 0.5, 50: 1.0, 100: 1.5, 400: 2.0}
 num_groups = len(custom_order_groups)
 
-group_offsets = [-0.15, 0, 0.15]  # 모델별 막대 위치 조정
+group_offsets = [-0.11, 0, 0.11]  # 모델별 막대 위치 조정
 
 group_idx_map = {model: i for i, group in enumerate(custom_order_groups) for model in group}
 
@@ -57,25 +59,24 @@ for group_idx, group in enumerate(custom_order_groups):
                 )
 
 plt.xticks(list(x_mapping.values()), labels=list(x_mapping.keys()), fontsize=font_size)
-plt.xlabel(r"$N_{\text{mcts}}$ simulation", fontsize=font_size)
+plt.xlabel(r"$N_{\text{mcts}}$", fontsize=font_size)
 
 plt.ylim(1100, 2100)
 plt.yticks([1200, 1400, 1600, 1800, 2000], labels=[])
 
-
 plt.subplots_adjust(left=0.1)
 
 plt.legend(
-    title="Model",
-    loc="upper left",
-    fontsize=font_size,
-    title_fontsize=font_size,
+    loc="upper center",
+    fontsize=16,
     frameon=True,
     edgecolor="black",
-    bbox_to_anchor=(0, 1),  # 좌상단 위치
-    handlelength=0.9,  # 색상 박스 길이 줄이기 (기본값: 2.0)
-    handletextpad=0.3,  # 색상과 모델명 간 간격 줄이기 (기본값: 1.0)
-    borderpad=0.3  # 범례 내부 패딩 줄이기 (기본값: 0.4~0.5)
+    bbox_to_anchor=(0.5, 1.1),  # 범례 위치 조정
+    ncol=3,  # 3개 나란히 배치
+    columnspacing=0.4,  # 열 간 간격 줄이기
+    handlelength=0.6,  # 색상 박스 길이 줄이기
+    handletextpad=0.2,  # 색상과 모델명 간 간격 줄이기
+    borderpad=0.2  # 범례 내부 패딩 줄이기
 )
 
 plt.grid(axis="y", alpha=0.3)

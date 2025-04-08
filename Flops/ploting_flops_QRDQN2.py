@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-# file_path = "csv_files/QRQAC_flops_results.csv"
-file_path = "QRQAC_flops_results.csv"
+# file_path = "csv_files/QRDQN_flops_results.csv"
+file_path = "QRDQN_flops_results.csv"
 df = pd.read_csv(file_path)
 columns_to_plot = ["quantile81_flops", "our_model_flops"]
 
@@ -15,17 +15,17 @@ nmcts_alpha = {
     400: 1.0
 }
 
-qrqac_colors = {
-    "quantile81_flops": (1, 0, 0),  # 빨강 (QRQAC)
-    "our_model_flops": (0, 0, 1)    # 파랑 (EQRQAC)
+qrdqn_colors = {
+    "quantile81_flops": (1, 0, 1),  # 마젠타 (QRDQN)
+    "our_model_flops": (0, 1, 1)  # 시안 (EQRDQN)
 }
 
 window_size = 20  # Moving average window size
-fig, ax = plt.subplots(figsize=(5.5, 5))
+fig, ax = plt.subplots(figsize=(4.5, 5))
 
 for nmcts, group in df.groupby("nmcts"):
     for col in columns_to_plot:
-        color_with_alpha = (*qrqac_colors[col], nmcts_alpha[nmcts])
+        color_with_alpha = (*qrdqn_colors[col], nmcts_alpha[nmcts])
         flops_per_step = group[col].diff() / 1e6
         smoothed_flops = flops_per_step.rolling(window=window_size, min_periods=window_size).mean()
         ax.plot(group["step"], smoothed_flops, linestyle='-', linewidth=2,
@@ -49,8 +49,8 @@ ax.set_xticks(np.arange(0, df["step"].max() + 1, 100))
 
 # 기존 모델별 범례 (왼쪽 정렬)
 model_legend = [
-    plt.Line2D([0], [0], color=qrqac_colors["quantile81_flops"], linewidth=3, markersize=8, label="QR-QAC"),
-    plt.Line2D([0], [0], color=qrqac_colors["our_model_flops"], linewidth=3, markersize=8, label="EQR-QAC")
+    plt.Line2D([0], [0], color=qrdqn_colors["quantile81_flops"], linewidth=3, markersize=8, label="QR-DQN"),
+    plt.Line2D([0], [0], color=qrdqn_colors["our_model_flops"], linewidth=3, markersize=8, label="EQR-DQN")
 ]
 
 # nmcts 값에 따른 검은색 선 범례 추가 (오른쪽 정렬)
@@ -59,19 +59,13 @@ nmcts_legend = [
     for nmcts in sorted(nmcts_alpha.keys())
 ]
 
-combined_legend = model_legend + nmcts_legend
+legend1 = ax.legend(handles=model_legend, fontsize=14, loc='upper left', bbox_to_anchor=(1.0, 1.0),
+                    frameon=False, handlelength=1, handletextpad=0.2, borderpad=0.2)
+# legend2 = ax.legend(handles=nmcts_legend, fontsize=14, loc='upper left', bbox_to_anchor=(1.5, 1.0),
+#                     frameon=False, handlelength=1, handletextpad=0.2, borderpad=0.2)
 
-# 하나의 열로 세로 정렬된 범례로 표시
-ax.legend(handles=combined_legend, fontsize=14, loc='upper left',
-          bbox_to_anchor=(1.02, 1.0), frameon=False, handlelength=1,
-          handletextpad=0.2, borderpad=0.2, ncol=1)
-#
-# legend1 = ax.legend(handles=model_legend, fontsize=14, loc='upper left', bbox_to_anchor=(1.0, 1.0),
-#                      frameon=False, handlelength=1, handletextpad=0.2, borderpad=0.2)
-# legend2 = ax.legend(handles=nmcts_legend, fontsize=14, loc='upper left', bbox_to_anchor=(1.55, 1.0),
-#                      frameon=False, handlelength=1, handletextpad=0.2, borderpad=0.2)
-#
-# ax.add_artist(legend1)  # 첫 번째 범례를 유지
+ax.add_artist(legend1)  # 첫 번째 범례를 유지
 
-plt.subplots_adjust(top=0.98, right=0.65, left=0.2,)
+plt.subplots_adjust(top=0.95, right=0.7, left=0.2
+                    )
 plt.show()
