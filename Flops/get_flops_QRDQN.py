@@ -4,7 +4,7 @@ import csv
 
 ncmtss = [2, 10, 50, 100, 400]
 
-file_path1 = '../QRDQN/csv_files/QRDQN_planning_depth.xlsx'
+file_path1 = '../QRDQN/training/csv_files/QRDQN_planning_depth.xlsx'
 data1 = pd.ExcelFile(file_path1)
 sheet_data1 = data1.parse('Sheet1')
 columns1 = sheet_data1.columns
@@ -27,7 +27,7 @@ nmcts_groups = [
     grouped_data[:, i:i + 5] for i in range(0, 25, 5)
 ]
 
-file_path2 = '../QRDQN/csv_files/QRDQN_num_of_quantile.xlsx'
+file_path2 = '../QRDQN/training/csv_files/QRDQN_num_of_quantile.xlsx'
 data2 = pd.ExcelFile(file_path2)
 sheet_data2 = data2.parse('Sheet1')
 

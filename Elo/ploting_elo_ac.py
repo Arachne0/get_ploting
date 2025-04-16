@@ -71,7 +71,7 @@ plt.legend(
     loc="upper center",
     fontsize=16,
     frameon=True,
-    edgecolor="black",
+    edgecolor="none",
     bbox_to_anchor=(0.5, 1.1),  # 범례 위치 조정
     ncol=3,  # 3개 나란히 배치
     columnspacing=0.4,  # 열 간 간격 줄이기
